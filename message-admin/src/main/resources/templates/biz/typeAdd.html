@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use('form', function() {
+            var form = layui.form;
+            var $ = layui.$;
+            form.render();
+
+            $('#saveType').on('click',function(){
+                var action = '/biz/addType';
+                var array = new Array();
+                $('input[name="sendType"]:checked').each(function(i){
+                    array[i] = $(this).val();
+                });
+                var type = {};
+                type.sourceCode = $('#sourceCode').val();
+                type.messageBizType = $('#messageBizType').val();
+                type.typeName = $('#typeName').val();
+                type.rateLimit = Number($('#rateLimit').val());
+                type.limitUnit = $('#limitUnit').val();
+                type.sendTypes = array;
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(type),
+                    success: function (data) {
+                        if(data.status == true){
+                            layer.msg("新增成功");
+                            parent.location.reload();
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    }
+                });
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+<div id="type" class="layui-form" style="margin-top: 10px; margin-right: 10px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">系统代码</label>
+        <div class="layui-input-block">
+            <input type="text" id="sourceCode" th:value="${sourceCode}" placeholder="请输入业务系统代码" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息类型</label>
+        <div class="layui-input-block">
+            <input type="text" id="messageBizType" placeholder="请输入消息类型代码" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型名称</label>
+        <div class="layui-input-block">
+            <input type="text" id="typeName" placeholder="请输入消息类型名称" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">发送类型</label>
+        <div class="layui-input-block">
+            <input type="checkbox" lay-filter="sendType" th:each="sendType:${sendTypes}" th:value="${sendType.messageSendType}" name="sendType" th:title="${sendType.sendTypeName}"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">限流</label>
+            <div class="layui-input-inline">
+                <input type="text" id="rateLimit" value="-1" placeholder="条数" autocomplete="off" class="layui-input"/>
+            </div>
+            <div class="layui-form-mid">条/每</div>
+            <div class="layui-input-inline">
+                <select name="limitUnit" id="limitUnit">
+                    <option value="分钟" selected="true">分钟</option>
+                    <option value="小时">小时</option>
+                    <option value="天">天</option>
+                </select>
+            </div>
+            <div class="layui-form-mid">/每地址</div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="saveType">保存</button>
+            <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

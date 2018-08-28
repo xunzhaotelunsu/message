@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.25.32.36:3306/message?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    username: root
+    password: root
+    hikari:
+      max-lifetime: 1765000
+      maximum-pool-size: 200
+  rabbitmq:
+    host: 10.25.32.37
+    port: 5672
+    username: admin
+    password: admin1234qwer
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+jwt:
+  secret: aabbabab #jwt密码
+  expire: 86400000 #jwt过期时间

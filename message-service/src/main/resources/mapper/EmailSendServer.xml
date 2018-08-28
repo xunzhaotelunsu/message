@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.persist.mapper.EmailSendServerMapper" >
+    <select id="getEmailSendServers" resultType="com.baosight.message.persist.po.EmailSendServer">
+        SELECT
+       server_code AS "serverCode",
+       host AS "host",
+       port AS "port",
+       username AS "username",
+       password AS "password",
+       personal AS "personal",
+       active AS "active",
+       priority AS "priority",
+       create_time AS "createTime"
+       FROM email_send_server
+       WHERE active = 'true' ORDER BY priority ASC
+    </select>
+</mapper>

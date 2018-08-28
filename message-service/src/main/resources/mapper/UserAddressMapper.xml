@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.persist.mapper.UserAddressMapper" >
+  <resultMap id="userAddress" type="com.baosight.message.persist.po.UserAddress" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <id column="message_send_type" property="messageSendType" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getUserAddress" resultMap="userAddress">
+    select
+    user_id as "userId",
+    message_send_type as "messageSendType",
+    address as "address",
+    create_time as "createTime"
+    from user_address
+    where user_id = #{userId,jdbcType=VARCHAR}
+      and message_send_type = #{messageSendType,jdbcType=VARCHAR}
+  </select>
+  <select id="getGroupAddress" resultType="com.baosight.message.persist.po.UserAddress">
+    SELECT
+	a.user_id as "userId",
+	a.address as "address"
+FROM
+	user_address a,
+	user_group g
+WHERE
+	g.user_id = a.user_id
+AND g.group_id = #{groupId,jdbcType=VARCHAR}
+AND a.message_send_type = #{messageSendType,jdbcType=VARCHAR}
+  </select>
+</mapper>

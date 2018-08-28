@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.persist.mapper.MessageInfoMapper" >
+  <resultMap id="messageInfo" type="com.baosight.message.persist.po.MessageInfo" >
+    <id column="message_id" property="messageId" jdbcType="VARCHAR" />
+    <result column="source_code" property="sourceCode" jdbcType="VARCHAR" />
+    <result column="message_biz_type" property="messageBizType" jdbcType="VARCHAR" />
+    <result column="message_biz_id" property="messageBizId" jdbcType="VARCHAR" />
+    <result column="message_sender" property="messageSender" jdbcType="VARCHAR" />
+    <result column="message_receiver" property="messageReceiver" jdbcType="VARCHAR" />
+    <result column="message_receiver_type" property="messageReceiverType" jdbcType="VARCHAR" />
+    <result column="message_receiver_address" property="messageReceiverAddress" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="pre_status" property="preStatus" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="privilege" property="privilege" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="attachments" property="attachments" jdbcType="LONGVARCHAR" />
+    <result column="extra_info" property="extraInfo" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.baosight.message.persist.po.MessageInfo" >
+    insert into message_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        message_id,
+      </if>
+      <if test="sourceCode != null" >
+        source_code,
+      </if>
+      <if test="messageBizType != null" >
+        message_biz_type,
+      </if>
+      <if test="messageBizId != null" >
+        message_biz_id,
+      </if>
+      <if test="messageSender != null" >
+        message_sender,
+      </if>
+      <if test="messageReceiver != null" >
+        message_receiver,
+      </if>
+      <if test="messageReceiverType != null" >
+        message_receiver_type,
+      </if>
+      <if test="messageReceiverAddress != null" >
+        message_receiver_address,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="preStatus != null" >
+        pre_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="privilege != null" >
+        privilege,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="attachments != null" >
+        attachments,
+      </if>
+      <if test="extraInfo != null" >
+        extra_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        #{messageId,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceCode != null" >
+        #{sourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="messageBizType != null" >
+        #{messageBizType,jdbcType=VARCHAR},
+      </if>
+      <if test="messageBizId != null" >
+        #{messageBizId,jdbcType=VARCHAR},
+      </if>
+      <if test="messageSender != null" >
+        #{messageSender,jdbcType=VARCHAR},
+      </if>
+      <if test="messageReceiver != null" >
+        #{messageReceiver,jdbcType=VARCHAR},
+      </if>
+      <if test="messageReceiverType != null" >
+        #{messageReceiverType,jdbcType=VARCHAR},
+      </if>
+      <if test="messageReceiverAddress != null" >
+        #{messageReceiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="preStatus != null" >
+        #{preStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="privilege != null" >
+        #{privilege,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachments != null" >
+        #{attachments,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extraInfo != null" >
+        #{extraInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

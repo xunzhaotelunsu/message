@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.admin.persist.mapper.MessageSendMapper" >
+
+    <select id="amount" resultType="integer">
+        select count(*) from message_send where send_time &gt; #{today}
+    </select>
+
+    <select id="queryMessageSend" resultType="com.baosight.message.admin.persist.po.MessageSend" parameterType="HashMap">
+        select
+        message_id as "messageId",
+        receiver_id as "receiverId",
+        message_send_type as "messageSendType",
+        receiver_address as "receiverAddress",
+        send_status as "sendStatus",
+        send_time as "sendTime",
+        read_status as "readStatus",
+        read_time as "readTime",
+        remark as "remark"
+        from message_send
+        where message_id = #{messageId}
+        <if test="receiverId!=null and receiverId!=''">
+            and receiver_id = #{receiverId}
+        </if>
+        <if test="sendStatus!=null and sendStatus!=''">
+            and send_status = #{sendStatus}
+        </if>
+        <if test="messageSendType!=null and messageSendType!=''">
+            and message_send_type = #{messageSendType}
+        </if>
+    </select>
+</mapper>

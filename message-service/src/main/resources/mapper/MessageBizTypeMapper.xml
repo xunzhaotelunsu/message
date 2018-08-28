@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.persist.mapper.MessageBizTypeMapper">
+    <resultMap id="messageBizType" type="com.baosight.message.persist.po.MessageBizType">
+        <id column="message_biz_type" property="messageBizType" jdbcType="VARCHAR"/>
+        <result column="source_code" property="sourceCode" jdbcType="VARCHAR"/>
+        <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+        <result column="rate_limit" property="rateLimit" jdbcType="INTEGER"/>
+        <result column="limit_unit" property="limitUnit" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getMessageBizType" parameterType="String" resultMap="messageBizType">
+        SELECT message_biz_type AS "messageBizType",
+               source_code      AS "sourceCode",
+               type_name        AS "typeName",
+               rate_limit       AS "rateLimit",
+               limit_unit       AS "limitUnit",
+               create_time      AS "createTime"
+        FROM message_biz_type
+        where message_biz_type = #{messageBizType}
+    </select>
+    <select id="check" resultType="integer">
+        select count(*)
+        from message_biz_type
+        where source_code = #{sourceCode}
+          and message_biz_type = #{messageBizType}
+    </select>
+</mapper>

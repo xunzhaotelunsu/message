@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use('code', function () {
+            layui.code({
+                about: false,
+                title: 'code'
+            });
+        });
+    </script>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>消息详情</legend>
+</fieldset>
+<table class="layui-table">
+    <tbody>
+    <tr>
+        <td class="layui-bg-gray">标题</td>
+        <td><p th:text="${messageInfo.title}"></p></td>
+        <td class="layui-bg-gray">接收人</td>
+        <td><p th:text="${messageInfo.messageReceiver}"></p></td>
+        <td class="layui-bg-gray">接收人类型</td>
+        <td><p th:text="${messageInfo.messageReceiverType}"></p></td>
+    </tr>
+    <tr>
+        <td class="layui-bg-gray">业务系统</td>
+        <td><p th:text="${messageInfo.sourceCode}"></p></td>
+        <td class="layui-bg-gray">消息业务类型</td>
+        <td><p th:text="${messageInfo.messageBizType}"></p></td>
+        <td class="layui-bg-gray">创建时间</td>
+        <td><p th:text="${messageInfo.createTime}"></p></td>
+    </tr>
+    <tr>
+        <td class="layui-bg-gray">消息内容</td>
+        <td colspan="5">
+            <pre class="layui-code">
+                <p th:text="${messageInfo.content}"></p>
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td class="layui-bg-gray">消息附件</td>
+        <td colspan="2">
+            <pre class="layui-code">
+                <p th:text="${messageInfo.attachments}"></p>
+            </pre>
+        </td>
+        <td class="layui-bg-gray">其他信息</td>
+        <td colspan="2">
+            <pre class="layui-code">
+                <p th:text="${messageInfo.extraInfo}"></p>
+            </pre>
+        </td>
+    </tr>
+    <tr>
+        <td class="layui-bg-gray">预处理状态</td>
+        <td><p th:text="${messageInfo.preStatus}"></p></td>
+        <td class="layui-bg-gray">备注信息</td>
+        <td><p th:text="${messageInfo.remark}"></p></td>
+        <td class="layui-bg-gray">业务主键</td>
+        <td><p th:text="${messageInfo.messageBizId}"></p></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

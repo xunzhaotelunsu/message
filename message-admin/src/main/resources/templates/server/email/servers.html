@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout"
+>
+<head>
+    <title>Message Admin</title>
+    <script>
+        layui.use(['form', 'table', 'layer'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , $ = layui.$
+                , table = layui.table
+            ;
+            form.render();
+
+            table.render({
+                elem: '#servers'
+                , url: '/server/email/serverQuery'
+                , cols: [[
+                    {field: 'serverCode', title: '服务代码'}
+                    , {field: 'personal', title: '服务别名'}
+                    , {
+                        field: 'active', title: '状态', templet: function (server) {
+                            var isActive = server.active;
+                            var serverCode = server.serverCode;
+                            if (isActive === 'true') {
+                                var rc = '<input type="checkbox" lay-filter="active" checked="true" value="' + serverCode + '" lay-skin="switch" lay-text="已启用|已禁用"/>';
+                                return rc;
+                            } else {
+                                var rc = '<input type="checkbox" lay-filter="active"  value="' + serverCode + '" lay-skin="switch" lay-text="已启用|已禁用"/>';
+                                return rc;
+                            }
+                        }
+                    }
+                    , {field: 'priority', title: '优先级'}
+                    , {field: 'createTime', title: '创建时间'}
+                    , {title: '操作', align: 'center', toolbar: '#operation'}
+                ]]
+                , id: 'servers'
+                , page: true //是否显示分页
+                , limit: 10 //每页默认显示的数量
+            });
+
+            var active = {
+                reload: function () {
+                    table.reload('servers', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        , where: {
+                            serverCode: $("#serverCode").val(),
+                            personal: $('#personal').val(),
+                            active: $('#active').val()
+                        }
+                    });
+                }
+            };
+
+            $('#search').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            $('#reset').on('click', function () {
+                $('#serverCode').val("");
+                $('#personal').val("");
+                $('#active').val("");
+            });
+
+            $('#add').on('click', function () {
+                layer.open({
+                    type: 2,
+                    content: '/server/email/serverAdd',
+                    area: ['500px', '550px'],
+                    closeBtn: 2,
+                    shadeClose: true,
+                    title: '新增邮件服务器'
+                });
+            });
+
+            table.on('tool(server)', function (obj) {
+                var data = obj.data;
+                var layEvent = obj.event;
+                if (layEvent === 'edit') { //编辑
+                    layer.open({
+                        type: 2,
+                        content: '/server/email/serverEdit?serverCode=' + data.serverCode,
+                        area: ['500px', '550px'],
+                        closeBtn: 2,
+                        shadeClose: true,
+                        title: '编辑邮件服务器'
+                    });
+                } else if (layEvent === 'del') {//删除
+                    layer.confirm('确定删除邮件服务器?'
+                        , {icon: 0, title: '删除'}, function (index) {
+                            var action = '/server/email/delete?serverCode=' + data.serverCode;
+                            $.ajax({
+                                type: 'POST',
+                                url: action,
+                                success: function (data) {
+                                    if (data.status == true) {
+                                        layer.msg("删除成功");
+                                        layer.close(index);
+                                        $('#search').click();
+                                    } else {
+                                        layer.msg("删除失败");
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        });
+
+                }
+            });
+
+            form.on('switch(active)', function (obj) {
+                var serverCode = this.value;
+                var isActive = obj.elem.checked;
+                var text;
+                if (isActive) {
+                    text = "已启用";
+                } else {
+                    text = "已禁用";
+                }
+                var setActive = {};
+                setActive.serverCode = serverCode;
+                setActive.active = isActive;
+                var action = '/server/email/setActive';
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(setActive),
+                    success: function (data) {
+                        if (data.status == true) {
+                            layer.msg(serverCode + text);
+                        } else {
+                            layer.msg("操作失败");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>邮件服务器查询</legend>
+    </fieldset>
+    <div class="layui-form">
+        <div class="layui-inline">
+            <label class="layui-form-label">服务代码</label>
+            <div class="layui-input-inline">
+                <input type="text" id="serverCode" name="serverCode" autocomplete="off"
+                       placeholder="请输入邮件服务器代码"
+                       class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">服务别名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="personal" name="personal" autocomplete="off"
+                       placeholder="请输入邮件服务器别名"
+                       class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">是否启用</label>
+            <div class="layui-input-inline">
+                <select name="active" id="active">
+                    <option value=""></option>
+                    <option value="true">已启用</option>
+                    <option value="false">已禁用</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button id="search" data-type="reload" class="layui-btn">查询</button>
+            <button id="reset" class="layui-btn layui-btn-normal">重置</button>
+            <button id="add" class="layui-btn layui-btn-warm">新增</button>
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>查询结果</legend>
+    </fieldset>
+    <table class="layui-hide" id="servers" lay-filter="server"></table>
+</div>
+</body>
+</html>

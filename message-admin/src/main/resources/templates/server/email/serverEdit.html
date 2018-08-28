@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use('form', function() {
+            var form = layui.form;
+            var $ = layui.$;
+            form.render();
+
+            form.on('switch(active)', function(data){
+                if(data.elem.checked){
+                    $('#active').val("true");
+                }else{
+                    $('#active').val("false");
+                }
+            });
+
+
+            $('#saveServer').on('click',function(){
+                var action = '/server/email/editServer';
+                var server = {};
+                server.serverCode = $('#serverCode').val();
+                server.personal = $('#personal').val();
+                server.host = $('#host').val();
+                server.port = Number($('#port').val());
+                server.username = $('#username').val();
+                server.password = $('#password').val();
+                server.active = $('#active').val();
+                server.priority = Number($('#priority').val());
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(server),
+                    success: function (data) {
+                        if(data.status == true){
+                            layer.msg("修改成功");
+                            parent.location.reload();
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="server" class="layui-form" style="margin-top: 10px; margin-right: 10px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务代码</label>
+        <div class="layui-input-block">
+            <input type="text" id="serverCode" th:value="${server.serverCode}" readonly="readonly" placeholder="请输入邮件服务器代码" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务别名</label>
+        <div class="layui-input-block">
+            <input type="text" id="personal" th:value="${server.personal}" placeholder="请输入邮件服务器别名" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">smtp地址</label>
+        <div class="layui-input-block">
+            <input type="text" id="host" th:value="${server.host}" placeholder="请输入smtp服务器地址" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">smtp端口</label>
+        <div class="layui-input-inline">
+            <input type="text" id="port" th:value="${server.port}" placeholder="请输入smtp服务器端口" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" id="username" th:value="${server.username}" placeholder="请输入服务器用户名" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+            <input type="password" id="password" th:value="${server.password}" placeholder="请输入服务器密码" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否启用</label>
+        <div class="layui-input-block">
+            <input type="checkbox" id="active" th:value="${server.active}" lay-filter="active" th:checked="${server.active == 'true'}" lay-skin="switch" lay-text="已启用|已禁用"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">优先级</label>
+        <div class="layui-input-block">
+            <input type="text" id="priority" th:value="${server.priority}" placeholder="请输入服务器优先级" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="saveServer">保存</button>
+            <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

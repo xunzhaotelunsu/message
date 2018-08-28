@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.admin.persist.mapper.MessageSendTypeMapper" >
+    <select id="queryMessageSendTypes" parameterType="String" resultType="com.baosight.message.admin.persist.po.SendType">
+        SELECT
+               t.message_send_type AS "messageSendType",
+               s.send_type_name AS "sendTypeName"
+        FROM
+             message_send_type t,
+             send_type s
+        WHERE
+                t.message_send_type = s.message_send_type
+          AND message_biz_type = #{messageBizType}
+    </select>
+    <insert id="insert" parameterType="com.baosight.message.admin.persist.po.MessageSendType" >
+        insert into message_send_type
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="messageSendType != null" >
+                message_send_type,
+            </if>
+            <if test="messageBizType != null" >
+                message_biz_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="messageSendType != null" >
+                #{messageSendType,jdbcType=VARCHAR},
+            </if>
+            <if test="messageBizType != null" >
+                #{messageBizType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <delete id="delete" parameterType="com.baosight.message.admin.persist.po.MessageSendType">
+        delete from message_send_type
+        where message_send_type= #{messageSendType}
+        and message_biz_type = #{messageBizType}
+    </delete>
+    <delete id="deleteByBizType" parameterType="String">
+        delete from message_send_type
+        where message_biz_type = #{messageBizType}
+    </delete>
+</mapper>

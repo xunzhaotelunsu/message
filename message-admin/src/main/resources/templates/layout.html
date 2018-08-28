@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use('element', function(){
+            var element = layui.element;
+
+        });
+    </script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">Message Admin</div>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <span sec:authentication="name"></span>
+                </a>
+            </li>
+            <li class="layui-nav-item"><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item">
+                    <a class="" href="/"><i class="layui-icon layui-icon-home"></i>&nbsp;&nbsp;首页</a>
+                </li>
+                <li class="layui-nav-item"><a href="/info/messages"><i class="layui-icon layui-icon-notice"></i>&nbsp;&nbsp;消息查询</a></li>
+                <li class="layui-nav-item  layui-nav-itemed">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-component"></i>&nbsp;&nbsp;业务管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/sys/sources"><i class="layui-icon layui-icon-app"></i>&nbsp;&nbsp;业务模块</a></dd>
+                        <dd><a href="/biz/types"><i class="layui-icon layui-icon-form"></i>&nbsp;&nbsp;消息类型</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-util"></i>&nbsp;&nbsp;发送服务</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/server/email/servers"><i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;邮件服务</a></dd>
+                        <dd><a href="#"><i class="layui-icon layui-icon-list"></i>&nbsp;&nbsp;短信服务</a></dd>
+                        <dd><a href="#"><i class="layui-icon layui-icon-cellphone"></i>&nbsp;&nbsp;移动客户端</a></dd>
+                        <dd><a href="#"><i class="layui-icon layui-icon-login-wechat"></i>&nbsp;&nbsp;微信服务</a></dd>
+                        <dd><a href="#"><i class="layui-icon layui-icon-login-qq"></i>&nbsp;&nbsp;IM服务</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-console"></i>&nbsp;&nbsp;监控统计</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body"  layout:fragment="content">
+
+    </div>
+    <div class="layui-footer">
+        © copyleft by cy
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorator="layout"
+>
+<head>
+    <title>Message Admin</title>
+    <script>
+        layui.use(['form', 'table', 'layer'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , table = layui.table
+            ;
+
+            table.render({
+                elem: '#sources'
+                , url: '/sys/sourceQuery'
+                , cols: [[
+                    {field: 'sourceCode', title: '业务模块代码'}
+                    , {field: 'sourceName', title: '业务模块名称'}
+                    , {field: 'createTime', title: '创建时间'}
+                    , {title: '操作', align: 'center', toolbar: '#operation'}
+                ]]
+                , id: 'sources'
+                , page: true //是否显示分页
+                , limit: 10 //每页默认显示的数量
+            });
+
+            var $ = layui.$, active = {
+                reload: function () {
+                    table.reload('sources', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        , where: {
+                            sourceCode: $('#sourceCode').val(),
+                            sourceName: $('#sourceName').val()
+                        }
+                    });
+                }
+            };
+
+            $('#search').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            $('#reset').on('click', function () {
+                $('#sourceCode').val("");
+                $('#sourceName').val("");
+            });
+
+            $('#add').on('click', function () {
+                layer.open({
+                    type: 2,
+                    content: '/sys/sourceAdd',
+                    area: ['500px', '320px'],
+                    closeBtn: 2,
+                    shadeClose: true,
+                    title: '新增业务模块'
+                });
+            });
+
+            table.on('tool(source)', function (obj) {
+                var data = obj.data;
+                var layEvent = obj.event;
+                if (layEvent === 'edit') { //编辑
+                    layer.open({
+                        type: 2,
+                        content: '/sys/sourceEdit?sourceCode='+ data.sourceCode,
+                        area: ['500px', '350px'],
+                        closeBtn: 2,
+                        shadeClose: true,
+                        title: '编辑业务模块'
+                    });
+                } else if (layEvent === 'biz') {//查看消息业务类型
+                    $(window).attr('location','/biz/types?sourceCode=' +data.sourceCode);
+                } else if (layEvent === 'del') {//删除
+                    layer.confirm('删除业务模块将删除与之关联的所有消息发送信息以及消息业务类型,确定删除?'
+                        , {icon: 0, title: '删除'}, function (index) {
+                            var action = '/sys/delSource?sourceCode=' + data.sourceCode;
+                            $.ajax({
+                                type: 'POST',
+                                url: action,
+                                success: function (data) {
+                                    if (data.status == true) {
+                                        layer.msg("删除成功");
+                                        layer.close(index);
+                                        $('#search').click();
+                                    } else {
+                                        layer.msg("删除失败");
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        });
+                }
+            });
+        });
+    </script>
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="biz">消息业务类型</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>业务模块查询</legend>
+    </fieldset>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">模块代码</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sourceCode" name="sourceCode" autocomplete="off" placeholder="请输入业务系统代码"
+                           class="layui-input"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">模块名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sourceName" name="sourceName" autocomplete="off"
+                           placeholder="请输入业务系统名称（模糊）"
+                           class="layui-input"/>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button id="search" data-type="reload" class="layui-btn">查询</button>
+                <button id="reset" class="layui-btn layui-btn-normal">重置</button>
+                <button id="add" class="layui-btn layui-btn-warm">新增</button>
+            </div>
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>查询结果</legend>
+    </fieldset>
+    <table class="layui-hide" id="sources" lay-filter="source"></table>
+</div>
+</body>
+</html>

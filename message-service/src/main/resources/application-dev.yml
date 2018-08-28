@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.25.32.36:3306/message?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    username: root
+    password: root
+    hikari:
+      max-lifetime: 1765000
+      maximum-pool-size: 200
+  influxdb:
+    url: http://localhost:8086
+    username: admin
+    password: admin
+    database: test
+    retention-policy: autogen
+  rabbitmq:
+    host: 10.25.32.37
+    port: 5672
+    username: admin
+    password: admin1234qwer
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+  redis:
+    host: 10.25.32.37
+    port: 6379
+    database: 0
+    password: zplat
+    pool:
+      max-active: 8
+      max-wait: -1
+      min-idle: 0
+    timeout: 0
+collector:
+  concurrency:
+    limit: 4
+sender:
+  retry:
+    limit: 3
+aliyun:
+  sms:
+    accessKey: LTAILhLBSKpAQ5BU
+    secretKey: pNPCV8Mn1NGFhEeDYY41Pasb0y3k1D
+    signName: 阿里云短信测试专用

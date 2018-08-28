@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.admin.persist.mapper.MessageInfoMapper" >
+
+    <select id="amount" resultType="integer">
+        select count(*) from message_info where create_time &gt; #{today}
+    </select>
+
+    <select id="queryMessageInfo" parameterType="HashMap" resultType="com.baosight.message.admin.persist.po.MessageInfo">
+        select
+        message_id as "messageId",
+        source_code as "sourceCode",
+        message_biz_type as "messageBizType",
+        message_biz_id as "messsageBizId",
+        message_sender as "messageSender",
+        message_receiver as "messageReceiver",
+        message_receiver_type as "messageReceiverType",
+        message_receiver_address as "messageReceiverAddress",
+        title as "title",
+        content as "content",
+        pre_status as "preStatus",
+        remark as "remark",
+        privilege as "privilege",
+        create_time as "createTime",
+        attachments as "attachments",
+        extra_info as "extraInfo"
+        from message_info
+        WHERE 1=1
+            <if test="sourceCode !=null and sourceCode !=''">
+                and source_code = #{sourceCode}
+            </if>
+            <if test="messageBizType !=null and messageBizType !=''">
+                and message_biz_type = #{messageBizType}
+            </if>
+            <if test="messageReceiver !=null and messageReceiver !=''">
+                and message_receiver = #{messageReceiver}
+            </if>
+            <if test="startTime !=null and startTime !=''">
+                and create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime !=null and endTime !=''">
+                and create_time &lt;= #{endTime}
+            </if>
+        order by create_time desc
+    </select>
+
+    <select id="getMessageInfo" resultType="com.baosight.message.admin.persist.po.MessageInfo" parameterType="String">
+        select
+               message_id as "messageId",
+               source_code as "sourceCode",
+               message_biz_type as "messageBizType",
+               message_biz_id as "messsageBizId",
+               message_sender as "messageSender",
+               message_receiver as "messageReceiver",
+               message_receiver_type as "messageReceiverType",
+               message_receiver_address as "messageReceiverAddress",
+               title as "title",
+               content as "content",
+               pre_status as "preStatus",
+               remark as "remark",
+               privilege as "privilege",
+               create_time as "createTime",
+               attachments as "attachments",
+               extra_info as "extraInfo"
+        from message_info
+        where message_id = #{messageId}
+    </select>
+
+    <delete id="deleteByBizType" parameterType="String">
+        DELETE s,
+                i
+        FROM
+             message_info i,
+             message_send s
+        WHERE
+                i.message_id = s.message_id
+          AND i.message_biz_type = #{messageBizType}
+    </delete>
+</mapper>

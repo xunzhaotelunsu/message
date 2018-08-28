@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.admin.persist.mapper.SendTypeMapper">
+    <select id="sendTypes" resultType="com.baosight.message.admin.persist.po.SendType">
+        select message_send_type as "messageSendType",
+               send_type_name as "sendTypeName"
+        from send_type
+    </select>
+</mapper>

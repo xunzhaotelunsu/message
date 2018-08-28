@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.persist.mapper.MessageSendTypeMapper" >
+  <resultMap id="messageSendType" type="com.baosight.message.persist.po.MessageSendType" >
+    <id column="message_send_type" property="messageSendType" jdbcType="VARCHAR" />
+    <id column="message_biz_type" property="messageBizType" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectSendTypeByBizType" parameterType="java.lang.String" resultType="com.baosight.message.persist.po.MessageSendType">
+    SELECT message_biz_type as "messageBizType",
+    message_send_type as "messageSendType"
+    FROM message_send_type
+    WHERE message_biz_type = #{messageBizType,jdbcType=VARCHAR}
+  </select>
+</mapper>

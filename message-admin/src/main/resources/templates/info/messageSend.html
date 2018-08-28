@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use(['form', 'table', 'layer'], function () {
+            var form = layui.form,
+                table = layui.table,
+                $ = layui.$,
+                layer = layui.layer
+            ;
+            //$("select[name='messageSendType']").find("option[value='']").attr('selected','selected');
+
+            var messageId =$("#messageId").val();
+            form.render();
+
+            table.render({
+                elem: '#sends'
+                , url: '/info/sendQuery'
+                , where: {messageId: messageId}
+                , cols: [[
+                    {field:'receiverId', title: '接收人'}
+                    ,{field:'messageSendType', title: '发送类型'}
+                    ,{field:'receiverAddress', title: '接收人地址'}
+                    ,{field:'sendStatus', title: '发送状态'}
+                    ,{field:'remark', title: '备注'}
+                    ,{field:'sendTime', title: '发送时间'}
+                    ,{filed:'sendStatus', title:'操作',templet: function (send) {
+                        if(send.sendStatus === 'failed'){
+                            var rc = '<a class="layui-btn layui-btn-xs" href="#" onclick="manualRetry(\''
+                            + send.messageId + '\',\'' + send.receiverId + '\',\'' + send.messageSendType + '\',\'' + send.receiverAddress +'\')">手动重试发送</a>';
+                            return rc;
+                        }else{
+                            return '<p></p>'
+                        }
+                        }}
+                ]]
+                , id: 'sends'
+                , page: true //是否显示分页
+                , limit: 10 //每页默认显示的数量
+            });
+
+            var active = {
+                reload: function(){
+                    table.reload('sends', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        ,where: {
+                            messageId: messageId,
+                            receiverId: $('#receiverId').val(),
+                            messageSendType: $('#messageSendType').val(),
+                            sendStatus: $('#sendStatus').val()
+                        }
+                    });
+                }
+            };
+
+            $('#search').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            $('#reset').on('click', function(){
+                $('#receiverId').val("");
+                $('#messageSendType').val("");
+                $('#sendStatus').val("");
+            });
+        });
+        
+        function manualRetry(messageId, receiverId, messageSendType,receiverAddress) {
+            var action='/info/manualRetry';
+            $.ajax({
+                type: 'POST',
+                url: action,
+                contentType: "application/json; charset=utf-8",
+                data: '{"messageId":"'+messageId+'","receiverId":"'+receiverId+'","messageSendType":"'+messageSendType+'","receiverAddress":"'+receiverAddress+'"}',
+                success: function (msg) {
+                    layer.open({
+                        title: 'info',
+                        content: msg
+                    })
+                }
+            });
+
+        }
+
+    </script>
+</head>
+<body>
+<input type="hidden" id="messageId" th:value="${messageId}"/>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>消息发送查询</legend>
+</fieldset>
+<div class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">接收人</label>
+            <div class="layui-input-inline">
+                <input type="text" id="receiverId" name="receiverId" autocomplete="off" placeholder="请输入接收人"
+                       class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">发送类型</label>
+            <div class="layui-input-inline">
+                <select name="messageSendType" id="messageSendType">
+                    <option value=""></option>
+                    <option th:each="sendType:${sendTypes}" th:value="${sendType.messageSendType}"
+                            th:text="${sendType.sendTypeName}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">发送状态</label>
+            <div class="layui-input-inline">
+                <select name="sendStatus" id="sendStatus">
+                    <option value=""></option>
+                    <option value="success">成功</option>
+                    <option value="failed">失败</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button id="search" data-type="reload" class="layui-btn">查询</button>
+            <button id="reset" class="layui-btn layui-btn-normal">重置</button>
+        </div>
+    </div>
+</div>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>查询结果</legend>
+</fieldset>
+<table class="layui-hide" id="sends" lay-filter="send"></table>
+</body>
+</html>

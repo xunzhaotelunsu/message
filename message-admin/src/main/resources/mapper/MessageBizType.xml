@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.admin.persist.mapper.MessageBizTypeMapper" >
+
+    <select id="amount" resultType="integer">
+        select count(*) from message_biz_type
+    </select>
+    <select id="check" resultType="integer" parameterType="String">
+        select count(*) from message_biz_type
+        where message_biz_type=#{messageBizType}
+    </select>
+
+    <select id="queryMessageBizType" parameterType="HashMap" resultType="com.baosight.message.admin.persist.dto.MessageBizTypeDetail">
+        SELECT
+               b.message_biz_type AS "messageBizType",
+               b.source_code AS "sourceCode",
+               (
+               SELECT
+                      source_name
+               FROM
+                    message_source s
+               WHERE
+                       b.source_code = s.source_code
+               ) AS "sourceName",
+               b.type_name AS "typeName",
+               b.rate_limit AS "rateLimit",
+               b.limit_unit AS "limitUnit",
+               b.create_time AS "createTime"
+        FROM
+             message_biz_type b
+        where 1=1
+        <if test="sourceCode !=null and sourceCode !=''">
+            and b.source_code = #{sourceCode}
+        </if>
+        <if test="messageBizType !=null and messageBizType !=''">
+            and b.message_biz_type = #{messageBizType}
+        </if>
+        order by b.create_time desc
+    </select>
+
+    <update id="update" parameterType="com.baosight.message.admin.persist.po.MessageBizType">
+        update message_biz_type
+        <trim prefix="set" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''" >
+                type_name = #{typeName},
+            </if>
+            <if test="rateLimit != null and rateLimit != ''" >
+                rate_limit = #{rateLimit},
+            </if>
+            <if test="limitUnit != null and limitUnit != ''" >
+                limit_unit = #{limitUnit},
+            </if>
+        </trim>
+        where message_biz_type = #{messageBizType}
+    </update>
+
+    <insert id="insert" parameterType="com.baosight.message.admin.persist.po.MessageBizType" >
+        insert into message_biz_type
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="messageBizType != null" >
+                message_biz_type,
+            </if>
+            <if test="sourceCode != null" >
+                source_code,
+            </if>
+            <if test="typeName != null" >
+                type_name,
+            </if>
+            <if test="rateLimit != null" >
+                rate_limit,
+            </if>
+            <if test="limitUnit != null" >
+                limit_unit,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="messageBizType != null" >
+                #{messageBizType,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceCode != null" >
+                #{sourceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="typeName != null" >
+                #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="rateLimit != null" >
+                #{rateLimit,jdbcType=INTEGER},
+            </if>
+            <if test="limitUnit != null" >
+                #{limitUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from message_biz_type where message_biz_type = #{messageBizType}
+    </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use('form', function() {
+            var form = layui.form;
+            var $ = layui.$;
+            form.render();
+
+            form.on('switch(pwd)', function(data){
+                if(data.elem.checked){
+                    $('#password').attr("disabled",false);
+                }else{
+                    $('#password').attr("disabled",true);
+                    $('#password').val("");
+                }
+            });
+
+            $('#saveSource').on('click',function(){
+                var action = '/sys/editSource';
+                var source = {};
+                source.sourceCode = $('#sourceCode').val();
+                source.sourceName = $('#sourceName').val();
+                source.password = $('#password').val();
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(source),
+                    success: function (data) {
+                        if(data.status == true){
+                            layer.msg("修改成功");
+                            parent.location.reload();
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="layui-form">
+    <div class="layui-form-item" style="margin-top: 10px; margin-right: 10px">
+        <label class="layui-form-label">模块代码</label>
+        <div class="layui-input-block">
+            <input type="text" id="sourceCode" th:value="${sourceCode}" readonly="readOnly" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">模块名称</label>
+        <div class="layui-input-block">
+            <input type="text" id="sourceName" th:value="${sourceName}" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">修改密码</label>
+        <div class="layui-input-block">
+            <input type="checkbox" id="changePassword" lay-skin="switch" lay-text="ON|OFF" lay-filter="pwd"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">新密码</label>
+        <div class="layui-input-inline">
+            <input type="password" id="password" lay-verify="pass" disabled="disabled" placeholder="请填写6到12位密码" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="saveSource">保存</button>
+            <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

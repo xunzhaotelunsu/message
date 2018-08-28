@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.persist.mapper.MessageSendMapper" >
+  <resultMap id="messageSend" type="com.baosight.message.persist.po.MessageSend" >
+    <id column="message_id" property="messageId" jdbcType="VARCHAR" />
+    <id column="receiver_id" property="receiverId" jdbcType="VARCHAR" />
+    <id column="message_send_type" property="messageSendType" jdbcType="VARCHAR" />
+    <result column="receiver_address" property="receiverAddress" jdbcType="VARCHAR" />
+    <result column="send_status" property="sendStatus" jdbcType="VARCHAR" />
+    <result column="send_time" property="sendTime" jdbcType="VARCHAR" />
+    <result column="read_status" property="readStatus" jdbcType="VARCHAR" />
+    <result column="read_time" property="readTime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.baosight.message.persist.po.MessageSend" >
+    insert into message_send
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        message_id,
+      </if>
+      <if test="receiverId != null" >
+        receiver_id,
+      </if>
+      <if test="messageSendType != null" >
+        message_send_type,
+      </if>
+      <if test="receiverAddress != null" >
+        receiver_address,
+      </if>
+      <if test="sendStatus != null" >
+        send_status,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="readStatus != null" >
+        read_status,
+      </if>
+      <if test="readTime != null" >
+        read_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="messageId != null" >
+        #{messageId,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverId != null" >
+        #{receiverId,jdbcType=VARCHAR},
+      </if>
+      <if test="messageSendType != null" >
+        #{messageSendType,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverAddress != null" >
+        #{receiverAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=VARCHAR},
+      </if>
+      <if test="readStatus != null" >
+        #{readStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="readTime != null" >
+        #{readTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="setSendStatus" parameterType="HashMap">
+    update message_send
+     set send_status = #{sendStatus,jdbcType=VARCHAR},
+     send_time = #{sendTime,jdbcType=VARCHAR},
+     remark = #{remark,jdbcType=VARCHAR}
+     where
+     message_id = #{messageId,jdbcType=VARCHAR}
+     and
+     receiver_id = #{receiverId,jdbcType=VARCHAR}
+     and
+     message_send_type = #{messageSendType,jdbcType=VARCHAR}
+  </update>
+</mapper>

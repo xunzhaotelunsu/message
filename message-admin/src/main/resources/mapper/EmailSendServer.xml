@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baosight.message.admin.persist.mapper.EmailSendServerMapper" >
+    <select id="queryEmailSendServer" parameterType="HashMap" resultType="com.baosight.message.admin.persist.po.EmailSendServer">
+        select server_code as "serverCode",
+               host as "host",
+               port as "post",
+               username as "username",
+               password as "password",
+               personal as "personal",
+               active as "active",
+               priority as "priority",
+               create_time as "createTime"
+        from email_send_server
+        where 1=1
+        <if test="serverCode!=null and serverCode!=''">
+            and server_code = #{serverCode}
+        </if>
+        <if test="personal!=null and personal!=''">
+            and personal like concat('%',#{personal},'%')
+        </if>
+        <if test="active!=null and active!=''">
+            and active = #{active}
+        </if>
+        order by priority asc,active asc
+    </select>
+    <select id="check" parameterType="String" resultType="Integer">
+        select count(*) from email_send_server
+        where server_code = #{serverCode}
+    </select>
+    <insert id="insert" parameterType="com.baosight.message.admin.persist.po.EmailSendServer" >
+        insert into email_send_server
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="serverCode != null" >
+                server_code,
+            </if>
+            <if test="host != null" >
+                host,
+            </if>
+            <if test="port != null" >
+                port,
+            </if>
+            <if test="username != null" >
+                username,
+            </if>
+            <if test="password != null" >
+                password,
+            </if>
+            <if test="personal != null" >
+                personal,
+            </if>
+            <if test="active != null" >
+                active,
+            </if>
+            <if test="priority != null" >
+                priority,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="serverCode != null" >
+                #{serverCode,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null" >
+                #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null" >
+                #{port,jdbcType=INTEGER},
+            </if>
+            <if test="username != null" >
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="personal != null" >
+                #{personal,jdbcType=VARCHAR},
+            </if>
+            <if test="active != null" >
+                #{active,jdbcType=VARCHAR},
+            </if>
+            <if test="priority != null" >
+                #{priority,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.baosight.message.admin.persist.po.EmailSendServer">
+        update email_send_server
+        <trim prefix="set" suffixOverrides=",">
+            <if test="host != null and host != ''" >
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="port != null and port != ''" >
+                port = #{port,jdbcType=INTEGER},
+            </if>
+            <if test="username != null and username != ''" >
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != ''" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="personal != null and personal != ''" >
+                personal = #{personal,jdbcType=VARCHAR},
+            </if>
+            <if test="active != null and active != ''" >
+                active = #{active,jdbcType=VARCHAR},
+            </if>
+            <if test="priority != null and priority != ''" >
+                priority = #{priority,jdbcType=INTEGER},
+            </if>
+        </trim>
+        where server_code = #{serverCode}
+    </update>
+    <update id="inactive" parameterType="String">
+        update email_send_server set active="false"
+        where server_code=#{serverCode}
+    </update>
+    <update id="active" parameterType="String">
+        update email_send_server set active="true"
+        where server_code=#{serverCode}
+    </update>
+    <delete id="delete" parameterType="String">
+        delete from email_send_server
+        where server_code=#{serverCode}
+    </delete>
+</mapper>

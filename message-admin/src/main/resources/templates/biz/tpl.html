@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <script type="text/javascript" th:src="@{/layui/layui.js}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.2.1.min.js}"/>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all"/>
+    <script>
+        layui.use('form', function() {
+            var form = layui.form;
+            var $ = layui.$;
+            form.render();
+
+            $('#saveTpl').on('click',function(){
+                var action = '/biz/editTpl';
+                var tpl = {};
+                tpl.messageBizType = $('#messageBizType').val();
+                tpl.messageSendType = $('#messageSendType').val();
+                tpl.template = $('#template').val();
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(tpl),
+                    success: function (data) {
+                        if(data.status == true){
+                            layer.msg("编辑成功");
+                            parent.location.reload();
+                        }else{
+                            layer.msg(data.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="tpl" class="layui-form" style="margin-top: 10px; margin-right: 10px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息类型</label>
+        <div class="layui-input-block">
+            <input type="text" id="messageBizType" th:value="${messageBizType}" readonly="readonly" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">发送类型</label>
+        <div class="layui-input-block">
+            <input type="text" id="messageSendType" th:value="${messageSendType}" readonly="readonly" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">模板内容</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入模板内容" id="template" th:utext="${template}" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="saveTpl">保存</button>
+            <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+        </div>
+    </div>
+</div>
+</body>
+</html>
