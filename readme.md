@@ -5,7 +5,7 @@
 * Redis
 * InfluxDB 1.5.3-1
 ### 主要开发技术
-* Spring Boot,Thymeleaf,layUI,JWT
+* Spring Boot,Velocity,Thymeleaf,layUI,JWT
 ### 数据流
 ![说明](/docs/flow.jpg)
 ### 代码简介与扩展
@@ -22,6 +22,11 @@
 }
 ```
 * Message Admin的管理账户在application-dev.properties中配置
+
+admin
+![说明](/docs/admin_index.jpg)  
+业务
+![说明](/docs/admin_bizType.jpg)
 * 发送消息, POST http://message-rest/collectMessage
 
 | **字段代码** | **字段说明** | **数据类型** | **最大长度** | **非空** |
