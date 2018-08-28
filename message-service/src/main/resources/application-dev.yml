@@ -39,6 +39,6 @@ sender:
     limit: 3
 aliyun:
   sms:
-    accessKey: LTAILhLBSKpAQ5BU
-    secretKey: pNPCV8Mn1NGFhEeDYY41Pasb0y3k1D
+    accessKey: LTAILhLBSKpAQ5BUxx
+    secretKey: pNPCV8Mn1NGFhEeDYY41Pasb0y3k1Dxw
     signName: 阿里云短信测试专用

@@ -32,7 +32,7 @@
 | **messageReceiver** | 接受者（群组id或者个人id） | String | 32 | Y |
 | **messageSender** | 发送人id | String | 32 | N |
 | **messageBizId** | 消息业务主键 | String | 64 | N |
-| **messageReceiverAddress****** | 接受者地址（可空，通过预处理获得） | String | 128 | N |
+| **messageReceiverAddress** | 接受者地址（可空，通过预处理获得） | String | 128 | N |
 | **title** | 消息标题 | String | 128 | N |
 | **content** | 消息内容（直接内容或者模板填充内容） | String | 65535 | Y |
 | **privilege** | 优先级 | String | 8 | N |
